@@ -1210,7 +1210,7 @@ bool irr;
 
 void loop() {
   byte t;
-  byte cmd_rpt;
+  static byte cmd_rpt;
 
   lcd_key=read_IR();
   if (lcd_key!=IRNone) {
@@ -1263,7 +1263,13 @@ void loop() {
   }
 
   if (IR_Recv || (cmd!=C_NONE)) {  // process command
-    cmd_rpt=(IR_Recv && (cmd==C_NONE) ? oldcmd: cmd);
+    if(cmd!=C_K_KEYRELEASED) {
+      cmd_rpt=((IR_Recv && (cmd==C_NONE)) ? oldcmd: cmd);
+      #ifdef DEBUGCMD
+      Serial.print("set cmd_rpt = ");
+      Serial.println(cmd_rpt);
+      #endif
+    }
 #ifdef DEBUGSERIAL
     if ((cmd!=C_NONE)) {
       Serial.print("PWR_STAT = ");
@@ -1304,7 +1310,7 @@ void loop() {
       (cmd==C_K_KEYRELEASED ? lcd.setCursor(14,1) : lcd.setCursor(11,1));
       lcd.print(cmd,HEX);
       lcd.print("   ");
-      if (oldcmd==C_PWR && cmd==C_K_KEYRELEASED) {
+      if (cmd_rpt==C_PWR && cmd==C_K_KEYRELEASED) {
 #ifdef DEBUGSERIAL
         Serial.println("cmd to power off");
 #endif
@@ -1499,7 +1505,7 @@ void loop() {
     }
     else {  // no power
 //      Serial.println("No Power");
-      if (oldcmd==C_PWR && cmd==C_K_KEYRELEASED) {
+      if (cmd_rpt==C_PWR && cmd==C_K_KEYRELEASED) {
 #ifdef DEBUGCMD
         Serial.println("Power_On cmd");
 #endif
