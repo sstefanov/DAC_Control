@@ -39,7 +39,7 @@ enum _COMMAND {
     C_SEL_IN_13,
     C_SEL_IN_14,
     C_SEL_IN_15,
-    C_SEL_IN_16,  
+    C_SEL_IN_16,
 // volume
     C_VOL_UP,
     C_VOL_DN,
