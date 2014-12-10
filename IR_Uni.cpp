@@ -1,6 +1,10 @@
 #include <Arduino.h>
 #include "commands.h"
+
+#include "IR_Uni.h"
+//#include "IR_UniDVR.h"
 #include "IR_Uni088.h"
+
 // 088
 //static unsigned int lastKey;
 

@@ -127,7 +127,8 @@ Total:
 #define ENC_PIN1	A1
 #define ENC_PIN2	A2
 #define ENC_BTN		11
+
 #define SELINDELAY	3000
-#define LED_INP		12
+//#define LED_INP		13
 
 #endif

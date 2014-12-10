@@ -13,7 +13,8 @@
 #include "EEPROM_circular.h"
 
 //#include "IR_Packard_Bell.h"
-#include "IR_Uni088.h"
+//#include "IR_Uni088.h"
+#include "IR_Uni.h"
 #include "commands.h"
 
 #include "TCA6424A/TCA6424A.h"
@@ -33,19 +34,14 @@
 //#define DEBUGSERIAL
 //#define DEBUGSERIALCMD
 //#define DEBUGSERIAL2
-#define DEBUGIR
-#define DEBUGCMD
+//#define DEBUGIR
+//#define DEBUGCMD
+//#define DEBUGPWR
 //#define DEBUGEEPROM
 //#define DEBUGIR
 //#define DEBUGENC
 //#define DEBUGRELAY
 //#define DEBUGINPUTS
-
-
-
-// delay 62.5ns on a 16MHz AtMega
-#define NOP __asm__ __volatile__ ("nop\n\t")
-#define pulse_pin(x)    delayMicroseconds(1); digitalWrite(x, HIGH); delayMicroseconds(1); digitalWrite(x, LOW);
 
 // constants
 
@@ -187,9 +183,9 @@ void LCD_Light(bool f=true) {  // light LCD
 
 void IRLED_Blink() {
   #ifdef DEBUGCMD
-      Serial.println("IRLED_Blink IR_Pressed IR_Recv");
+    Serial.println("IRLED_Blink IR_Pressed IR_Recv");
+    Serial.print("^");
   #endif
-  Serial.print("^");
   IR_TimerCount=0;
   IR_Recv=true;
   IR_Pressed=true;
@@ -1193,7 +1189,7 @@ void setup() {
   PWR_STAT=false;
   inputString.reserve(40);
   eec.FindPtr();
-  encoder = new ClickEncoder(A1, A2, 11);
+  encoder = new ClickEncoder(ENC_PIN1, ENC_PIN2, ENC_BTN);
   encoder->setAccelerationEnabled(false);
   Timer1.initialize(1000);
   Timer1.attachInterrupt(timerIsr); //,10000); // 10 ms
@@ -1222,11 +1218,12 @@ void loop() {
   if (fade) {
     fade=false;
     Timer1.pwm(LCD_BL_PIN, fader<<2);
+
 //    analogWrite(LCD_BL_PIN, fader); 
-//#ifdef DEBUGSERIAL
-//    Serial.print("fader=");
-//    Serial.println(fader);
-//#endif
+#ifdef DEBUGSERIAL3
+    Serial.print("fader=");
+    Serial.println(fader);
+#endif
   }
 
 #ifdef DEBUGCMD0
